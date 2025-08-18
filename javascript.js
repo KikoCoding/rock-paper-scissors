@@ -1,3 +1,21 @@
+let computerScore = 0;
+let humanScore = 0;
+let tieCount = 0;
+
+const scoreboard = document.createElement("div");
+scoreboard.classList.add('scoreboard');
+
+const message = document.createElement('p');
+message.classList.add('game-result');
+
+const score = document.createElement("p");
+score.classList.add('score');
+
+const gameUI = document.querySelector('#gameUI');
+
+const body = document.querySelector("body");
+
+
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
@@ -15,57 +33,38 @@ function getComputerChoice() {
     }
 }
 
-function getHumanChoice(){
-    let promptAnswer = prompt("What will you choose? Rock, paper or scissors?").toLowerCase();
-    if(promptAnswer == "rock"){
-        let humanChoice = 0;
-    }
-    else if(promptAnswer == "paper"){
-        let humanChoice = 1;
-    }
-    else if(promptAnswer == "scissors")
-    {
-        let humanChoice = 2;
-    }
-    return promptAnswer;
-}
-
 function playRound(humanChoice, computerChoice) {
     // If the human won...
     if((humanChoice == "rock" && computerChoice == "scissors") || (humanChoice == "paper" && computerChoice == "rock") || (humanChoice == "scissors" && computerChoice == "paper")){
-        console.log(`You win! ${humanChoice} beats ${computerChoice}.`);
+        message.textContent = `You win! ${humanChoice} beats ${computerChoice}.`;
+        message.style["color"] = "green";
         humanScore += 1;
     } 
     // If there was a tie...
     else if(humanChoice == computerChoice){
-        console.log(`Tie! Both chose ${humanChoice}.`)
+        message.textContent = `Tie! Both chose ${humanChoice}.`
+        message.style["color"] = "black";
+        tieCount += 1;
     }
     // If the computer won...
     else{
-        console.log(`You lose. ${computerChoice} beats ${humanChoice}.`);
+        message.textContent = `You lose. ${computerChoice} beats ${humanChoice}.`
+        message.style["color"] = "red";
         computerScore += 1;
     }
 }
 
-function playGame(){
+gameUI.addEventListener('click', (e) => {
 
-    // Play 5 rounds
-
-    for(let i = 0; i < 5; i++)
-    {
-        let humanSelection = getHumanChoice();
-        let computerSelection = getComputerChoice();
-
-        playRound(humanSelection, computerSelection);
+    switch(e.target.id){
+        case 'rock': playRound('rock', getComputerChoice()); break;
+        case 'paper': playRound('paper', getComputerChoice()); break;
+        case 'scissors': playRound('scissors', getComputerChoice()); break;
     }
 
-    // Reset the scores
+    score.textContent = `Your score: ${humanScore} | Computer score : ${computerScore} | Ties: ${tieCount}`;
+})
 
-    computerScore = 0;
-    humanScore = 0;
-}
-
-let computerScore = 0;
-let humanScore = 0;
-
-playGame();
+body.appendChild(scoreboard);
+scoreboard.appendChild(message);
+scoreboard.appendChild(score);
